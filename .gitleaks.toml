@@ -1,0 +1,10 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Generated and third-party dependency paths"
+paths = [
+  '''^node_modules/''',
+  '''^\.next/''',
+  '''^package-lock\.json$''',
+]

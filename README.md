@@ -4,6 +4,8 @@ Interactive demonstrations of applied AI workflows for private equity. The appli
 
 All organisations, people, domains and metrics are fictional. Outputs are illustrative and are not investment advice.
 
+[Open the live demo](https://pe-labs.vercel.app)
+
 ## Product
 
 - **Company intelligence:** search twenty synthetic European technology companies and inspect a concise investment profile.

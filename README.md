@@ -1,5 +1,7 @@
 # PE Labs
 
+Prototype AI workflows for company intelligence, thematic screening, and relationship-led origination.
+
 Interactive demonstrations of applied AI workflows for private equity. The application links company intelligence, transparent investment screening and relationship drafting through one synthetic company universe.
 
 All organisations, people, domains and metrics are fictional. Outputs are illustrative and are not investment advice.

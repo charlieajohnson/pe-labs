@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { CSSProperties } from "react";
 import type { Organisation } from "@/data/organisations";
 import { formatEurMillions } from "@/lib/format";
@@ -36,12 +37,31 @@ export function PortfolioField({
   const selectedScore = screenOrganisation(selected);
 
   return (
-    <div
-      className="portfolio-field"
-      role="img"
-      aria-label="Portfolio field showing Alder & Pine Systems selected from the synthetic company universe"
-    >
-      <div className="field-grid" aria-hidden="true" />
+    <figure className="portfolio-field hero-tableau">
+      <Image
+        src="/atelier/pe-labs-hero-tableau.webp"
+        alt="Renaissance-style analyst reviewing company dossiers, market maps and correspondence in a private-market intelligence atelier"
+        className="tableau-image"
+        width={1536}
+        height={1024}
+        priority
+        sizes="(max-width: 980px) 100vw, 46vw"
+      />
+      <div
+        className="tableau-fallback"
+        aria-hidden="true"
+        style={
+          {
+            "--selected-x": "42%",
+            "--selected-y": "58%",
+          } as CSSProperties
+        }
+      >
+        <div className="field-grid" />
+        <div className="fallback-ledger ledger-one" />
+        <div className="fallback-ledger ledger-two" />
+        <div className="fallback-ledger ledger-three" />
+      </div>
       {organisations.slice(0, 20).map((organisation, index) => {
         const [x, y] = markerPositions[index] ?? [50, 50];
         const isSelected = organisation.slug === selected.slug;
@@ -62,10 +82,10 @@ export function PortfolioField({
       })}
       <div className="case-packet">
         <span className="eyebrow">Current demo universe</span>
-        <strong>20 synthetic European companies</strong>
+        <strong>{organisations.length} synthetic European companies</strong>
         <div className="case-line" />
         <h2>{selected.name}</h2>
-        <p>
+        <p className="tableau-detail">
           {selected.subSector} · {selected.ownership} ·{" "}
           {formatEurMillions(selected.revenueEurM)} revenue
         </p>
@@ -74,7 +94,10 @@ export function PortfolioField({
           <span>{selectedScore.tier}</span>
           <span>{selected.confidence} confidence</span>
         </div>
+        <div className="case-thread" aria-hidden="true">
+          Source fields · Screening rubric · Outreach context
+        </div>
       </div>
-    </div>
+    </figure>
   );
 }

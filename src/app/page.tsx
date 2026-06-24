@@ -2,10 +2,17 @@ import { ArrowRight, ChartNoAxesCombined, Mail, Search } from "lucide-react";
 import Link from "next/link";
 import { ModuleCard } from "@/components/module-card";
 import { OrganisationCard } from "@/components/organisation-card";
+import { PortfolioField } from "@/components/portfolio-field";
 import { organisations } from "@/data/organisations";
+import {
+  defaultCompanySlug,
+  moduleHref,
+  resolveSelectedCompany,
+} from "@/lib/company-flow";
 import { screenAll } from "@/lib/scoring";
 
 export default function HomePage() {
+  const selected = resolveSelectedCompany(defaultCompanySlug);
   const featured = screenAll(organisations)
     .filter(({ result }) => result.score !== null)
     .slice(0, 3);
@@ -24,24 +31,21 @@ export default function HomePage() {
             useful action.
           </p>
           <div className="hero-actions">
-            <Link href="/companies" className="button">
+            <Link
+              href={moduleHref("intelligence", selected.slug)}
+              className="button"
+            >
               Explore the company universe <ArrowRight size={16} />
             </Link>
-            <Link href="/screening" className="button secondary">
+            <Link
+              href={moduleHref("screening", selected.slug)}
+              className="button secondary"
+            >
               View ranked screens
             </Link>
           </div>
         </div>
-        <div
-          className="hero-landscape"
-          role="img"
-          aria-label="Abstract pastoral landscape"
-        >
-          <div className="landscape-note">
-            <span>Current demo universe</span>
-            <strong>20 synthetic European companies</strong>
-          </div>
-        </div>
+        <PortfolioField organisations={organisations} selected={selected} />
       </section>
 
       <section aria-labelledby="modules-title">
@@ -55,12 +59,26 @@ export default function HomePage() {
             database, no live client data and no black-box score.
           </p>
         </div>
+        <ol className="workflow-thread" aria-label="Connected workflow">
+          {[
+            "Company record",
+            "Investment view",
+            "Screen",
+            "Relationship angle",
+            "Draft",
+          ].map((item, index) => (
+            <li key={item} className="workflow-thread-step">
+              <span>0{index + 1}</span>
+              <strong>{item}</strong>
+            </li>
+          ))}
+        </ol>
         <div className="module-grid">
           <ModuleCard
             number="01 / Find"
             title="Company intelligence"
             description="Search a synthetic European company universe and open a concise, evidence-aware investment profile."
-            href="/companies"
+            href={moduleHref("intelligence", selected.slug)}
             action="Explore companies"
             icon={Search}
             tone="sage"
@@ -69,7 +87,7 @@ export default function HomePage() {
             number="02 / Screen"
             title="Investment screening"
             description="Apply explicit qualification gates and an inspectable ten-point rubric across every company."
-            href="/screening"
+            href={moduleHref("screening", selected.slug)}
             action="Review the ranking"
             icon={ChartNoAxesCombined}
             tone="clay"
@@ -78,7 +96,7 @@ export default function HomePage() {
             number="03 / Engage"
             title="Relationship drafting"
             description="Turn structured company context and an angle into concise outreach through a swappable provider boundary."
-            href="/outreach"
+            href={moduleHref("outreach", selected.slug)}
             action="Draft an email"
             icon={Mail}
             tone="gold"
@@ -103,6 +121,7 @@ export default function HomePage() {
               key={organisation.slug}
               organisation={organisation}
               result={result}
+              selected={organisation.slug === selected.slug}
             />
           ))}
         </div>

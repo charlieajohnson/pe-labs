@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { CompanyExplorer } from "@/components/company-explorer";
 import { WorkflowBar } from "@/components/workflow-bar";
 import { organisations, sectors } from "@/data/organisations";
+import { resolveSelectedCompany } from "@/lib/company-flow";
 
 export const metadata: Metadata = {
   title: "Company intelligence",
@@ -9,10 +10,17 @@ export const metadata: Metadata = {
     "Search and inspect a synthetic universe of European technology companies.",
 };
 
-export default function CompaniesPage() {
+export default async function CompaniesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ company?: string }>;
+}) {
+  const { company } = await searchParams;
+  const selected = company ? resolveSelectedCompany(company) : undefined;
+
   return (
     <div className="page-shell">
-      <WorkflowBar active="find" />
+      <WorkflowBar active="find" selectedSlug={selected?.slug} />
       <div className="page-intro">
         <div>
           <span className="eyebrow">Company intelligence</span>
@@ -24,7 +32,11 @@ export default function CompaniesPage() {
           decision-ready view.
         </p>
       </div>
-      <CompanyExplorer organisations={organisations} sectors={sectors} />
+      <CompanyExplorer
+        organisations={organisations}
+        sectors={sectors}
+        selectedSlug={selected?.slug}
+      />
     </div>
   );
 }

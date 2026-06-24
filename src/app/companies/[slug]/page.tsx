@@ -6,6 +6,7 @@ import { MetricCard } from "@/components/metric-card";
 import { ScoreRadar } from "@/components/score-radar";
 import { WorkflowBar } from "@/components/workflow-bar";
 import { getOrganisation, organisations } from "@/data/organisations";
+import { moduleHref } from "@/lib/company-flow";
 import { formatDate, formatEurMillions, formatPercent } from "@/lib/format";
 import { screenOrganisation, tierClass } from "@/lib/scoring";
 
@@ -41,7 +42,7 @@ export default async function CompanyDetailPage({
 
   return (
     <div className="page-shell detail-header">
-      <WorkflowBar active="find" />
+      <WorkflowBar active="find" selectedSlug={organisation.slug} />
       <div className="breadcrumb">
         <Link href="/companies">
           <ArrowLeft size={13} />
@@ -63,11 +64,14 @@ export default async function CompanyDetailPage({
           </p>
         </div>
         <div className="detail-actions">
-          <Link href="/screening" className="button secondary small">
-            Compare screen
+          <Link
+            href={moduleHref("screening", organisation.slug)}
+            className="button secondary small"
+          >
+            Screen this company
           </Link>
           <Link
-            href={`/outreach?company=${organisation.slug}`}
+            href={moduleHref("outreach", organisation.slug)}
             className="button small"
           >
             Draft outreach <ArrowRight size={14} />
@@ -117,6 +121,31 @@ export default async function CompanyDetailPage({
               <span>{organisation.businessModel}</span>
               <span>{organisation.region}</span>
               <span>{organisation.ownership}</span>
+            </div>
+          </section>
+
+          <section className="panel content-panel">
+            <div className="panel-title">
+              <h2>Synthetic source fields</h2>
+              <span>No live client data</span>
+            </div>
+            <div className="source-field-grid">
+              {[
+                ["Business model", organisation.businessModel],
+                ["Ownership", organisation.ownership],
+                ["Revenue", formatEurMillions(organisation.revenueEurM)],
+                ["EBITDA", formatEurMillions(organisation.ebitdaEurM)],
+                ["Recurring revenue", `${organisation.recurringRevenuePct}%`],
+                [
+                  "International revenue",
+                  `${organisation.internationalRevenuePct}%`,
+                ],
+              ].map(([label, value]) => (
+                <div key={label} className="source-field">
+                  <span>{label}</span>
+                  <strong>{value}</strong>
+                </div>
+              ))}
             </div>
           </section>
 

@@ -3,6 +3,7 @@ import { MetricCard } from "@/components/metric-card";
 import { ScreeningExplorer } from "@/components/screening-explorer";
 import { WorkflowBar } from "@/components/workflow-bar";
 import { organisations } from "@/data/organisations";
+import { resolveSelectedCompany } from "@/lib/company-flow";
 import { screenAll } from "@/lib/scoring";
 
 export const metadata: Metadata = {
@@ -11,7 +12,13 @@ export const metadata: Metadata = {
     "Compare synthetic companies using explicit qualification gates and an inspectable score.",
 };
 
-export default function ScreeningPage() {
+export default async function ScreeningPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ company?: string }>;
+}) {
+  const { company } = await searchParams;
+  const selected = resolveSelectedCompany(company);
   const screened = screenAll(organisations);
   const qualified = screened.filter(({ result }) => result.score !== null);
   const highPriority = screened.filter(
@@ -23,7 +30,7 @@ export default function ScreeningPage() {
 
   return (
     <div className="page-shell">
-      <WorkflowBar active="screen" />
+      <WorkflowBar active="screen" selectedSlug={selected.slug} />
       <div className="page-intro">
         <div>
           <span className="eyebrow">Investment screening</span>
@@ -63,7 +70,10 @@ export default function ScreeningPage() {
           detail="Stopped before ranking"
         />
       </div>
-      <ScreeningExplorer organisations={organisations} />
+      <ScreeningExplorer
+        organisations={organisations}
+        initialSlug={selected.slug}
+      />
     </div>
   );
 }

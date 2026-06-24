@@ -7,12 +7,18 @@ import { ScoreBadge } from "./score-badge";
 export function OrganisationCard({
   organisation,
   result,
+  selected = false,
 }: {
   organisation: Organisation;
   result: ScreeningResult;
+  selected?: boolean;
 }) {
   return (
-    <Link href={`/companies/${organisation.slug}`} className="company-card">
+    <Link
+      href={`/companies/${organisation.slug}`}
+      className={selected ? "company-card selected" : "company-card"}
+      aria-current={selected ? "true" : undefined}
+    >
       <div className="company-card-top">
         <span className="company-monogram">
           {organisation.name.slice(0, 2).toUpperCase()}

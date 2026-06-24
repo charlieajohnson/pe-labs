@@ -1,8 +1,10 @@
 "use client";
 
 import { Check, Clipboard, LoaderCircle, Mail } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { type FormEvent, useMemo, useState } from "react";
 import type { Organisation } from "@/data/organisations";
+import { moduleHref } from "@/lib/company-flow";
 import {
   type DraftMode,
   type DraftOutput,
@@ -22,6 +24,7 @@ export function OutreachStudio({
   initialSlug,
   providerMode,
 }: OutreachStudioProps) {
+  const router = useRouter();
   const [organisationSlug, setOrganisationSlug] = useState(initialSlug);
   const [recipientFirstName, setRecipientFirstName] = useState("Sophie");
   const [recipientRole, setRecipientRole] = useState("Founder & CEO");
@@ -40,6 +43,13 @@ export function OutreachStudio({
       organisations[0],
     [organisationSlug, organisations],
   );
+
+  function selectOrganisation(slug: string) {
+    setOrganisationSlug(slug);
+    setDraft(null);
+    setCopied(false);
+    router.replace(moduleHref("outreach", slug), { scroll: false });
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -88,7 +98,7 @@ export function OutreachStudio({
           <span className="provider-badge">
             {providerMode === "openai"
               ? "Live OpenAI provider · rate limited"
-              : "Mock provider · no model cost"}
+              : "Synthetic provider boundary"}
           </span>
         </div>
 
@@ -109,6 +119,12 @@ export function OutreachStudio({
               Growth <strong>{organisation.revenueGrowthPct}%</strong>
             </span>
           </div>
+          <div className="context-used context-card-chips">
+            <span>{organisation.ownership}</span>
+            <span>{organisation.businessModel}</span>
+            <span>{organisation.region}</span>
+            <span>{organisation.confidence} confidence</span>
+          </div>
         </div>
 
         <form onSubmit={submit}>
@@ -118,10 +134,7 @@ export function OutreachStudio({
               <select
                 id="organisation"
                 value={organisationSlug}
-                onChange={(event) => {
-                  setOrganisationSlug(event.target.value);
-                  setDraft(null);
-                }}
+                onChange={(event) => selectOrganisation(event.target.value)}
               >
                 {organisations.map((item) => (
                   <option key={item.slug} value={item.slug}>

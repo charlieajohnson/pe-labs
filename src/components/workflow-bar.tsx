@@ -1,29 +1,34 @@
 import { ArrowRight } from "lucide-react";
-import type { Route } from "next";
 import Link from "next/link";
+import { moduleHref, type WorkflowModule } from "@/lib/company-flow";
 
 const steps = [
-  { href: "/companies", label: "Find" },
-  { href: "/screening", label: "Screen" },
-  { href: "/outreach", label: "Engage" },
-] satisfies Array<{ href: Route; label: string }>;
+  { module: "intelligence", label: "Find", active: "find" },
+  { module: "screening", label: "Screen", active: "screen" },
+  { module: "outreach", label: "Engage", active: "engage" },
+] satisfies Array<{
+  module: WorkflowModule;
+  label: string;
+  active: "find" | "screen" | "engage";
+}>;
 
 export function WorkflowBar({
   active,
+  selectedSlug,
 }: {
   active: "find" | "screen" | "engage";
+  selectedSlug?: string;
 }) {
   return (
     <nav className="workflow-bar" aria-label="Workflow">
       {steps.map((step, index) => (
         <div key={step.label} className="workflow-step-wrap">
           <Link
-            href={step.href}
+            href={moduleHref(step.module, selectedSlug)}
             className={
-              active === step.label.toLowerCase()
-                ? "workflow-step active"
-                : "workflow-step"
+              active === step.active ? "workflow-step active" : "workflow-step"
             }
+            aria-current={active === step.active ? "page" : undefined}
           >
             <span>0{index + 1}</span>
             {step.label}

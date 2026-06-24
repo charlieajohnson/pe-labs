@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { OutreachStudio } from "@/components/outreach-studio";
 import { WorkflowBar } from "@/components/workflow-bar";
-import { getOrganisation, organisations } from "@/data/organisations";
+import { organisations } from "@/data/organisations";
+import { resolveSelectedCompany } from "@/lib/company-flow";
 import { getPublicDraftProvider } from "@/lib/drafting/resolve-provider";
 
 export const metadata: Metadata = {
@@ -16,13 +17,12 @@ export default async function OutreachPage({
   searchParams: Promise<{ company?: string }>;
 }) {
   const { company } = await searchParams;
-  const initialSlug =
-    company && getOrganisation(company) ? company : organisations[0].slug;
+  const selected = resolveSelectedCompany(company);
   const providerMode = getPublicDraftProvider();
 
   return (
     <div className="page-shell">
-      <WorkflowBar active="engage" />
+      <WorkflowBar active="engage" selectedSlug={selected.slug} />
       <div className="page-intro">
         <div>
           <span className="eyebrow">Relationship drafting</span>
@@ -36,7 +36,7 @@ export default async function OutreachPage({
       </div>
       <OutreachStudio
         organisations={organisations}
-        initialSlug={initialSlug}
+        initialSlug={selected.slug}
         providerMode={providerMode}
       />
     </div>

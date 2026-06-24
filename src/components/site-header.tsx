@@ -1,18 +1,27 @@
 "use client";
 
-import type { Route } from "next";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
+import {
+  moduleHref,
+  selectedCompanySlugFromRoute,
+  type WorkflowModule,
+} from "@/lib/company-flow";
 import { BrandMark } from "./brand-mark";
 
 const links = [
-  { href: "/companies", label: "Intelligence" },
-  { href: "/screening", label: "Screening" },
-  { href: "/outreach", label: "Outreach" },
-] satisfies Array<{ href: Route; label: string }>;
+  { module: "intelligence", path: "/companies", label: "Intelligence" },
+  { module: "screening", path: "/screening", label: "Screening" },
+  { module: "outreach", path: "/outreach", label: "Outreach" },
+] satisfies Array<{ module: WorkflowModule; path: string; label: string }>;
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const selectedSlug = selectedCompanySlugFromRoute(
+    pathname,
+    searchParams.get("company"),
+  );
 
   return (
     <header className="site-header">
@@ -20,17 +29,38 @@ export function SiteHeader() {
         <BrandMark />
         <nav className="main-nav" aria-label="Primary navigation">
           {links.map((link) => {
-            const active = pathname.startsWith(link.href);
+            const active = pathname.startsWith(link.path);
             return (
               <Link
-                key={link.href}
-                href={link.href}
+                key={link.path}
+                href={moduleHref(link.module, selectedSlug)}
                 className={active ? "active" : undefined}
+                aria-current={active ? "page" : undefined}
               >
                 {link.label}
               </Link>
             );
           })}
+        </nav>
+        <div className="demo-status" title="All data is synthetic">
+          <span /> Synthetic demo
+        </div>
+      </div>
+    </header>
+  );
+}
+
+export function SiteHeaderFallback() {
+  return (
+    <header className="site-header">
+      <div className="header-inner">
+        <BrandMark />
+        <nav className="main-nav" aria-label="Primary navigation">
+          {links.map((link) => (
+            <Link key={link.path} href={moduleHref(link.module)}>
+              {link.label}
+            </Link>
+          ))}
         </nav>
         <div className="demo-status" title="All data is synthetic">
           <span /> Synthetic demo

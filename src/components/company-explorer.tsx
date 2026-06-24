@@ -9,9 +9,11 @@ import { screenOrganisation } from "@/lib/scoring";
 export function CompanyExplorer({
   organisations,
   sectors,
+  selectedSlug,
 }: {
   organisations: Organisation[];
   sectors: string[];
+  selectedSlug?: string;
 }) {
   const [query, setQuery] = useState("");
   const [sector, setSector] = useState("all");
@@ -72,6 +74,7 @@ export function CompanyExplorer({
               key={organisation.slug}
               organisation={organisation}
               result={screenOrganisation(organisation)}
+              selected={organisation.slug === selectedSlug}
             />
           ))}
         </div>

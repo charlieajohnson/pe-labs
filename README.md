@@ -192,6 +192,7 @@ The example is synthetic, but the workflow mirrors a real operating pattern: ide
 3. **Safe by default.** The public demo runs without a database, API key or paid provider.
 4. **Provider boundaries.** Drafting can switch from mock output to OpenAI without moving credentials client-side.
 5. **Honest provenance.** Synthetic data, mock output and live model output are labelled clearly.
+6. **Workflow-led visual system.** The interface uses Charlie's Neo-Renaissance workshop and laboratory register, with paper grain, measurement ticks, dot matrices and restrained ledger chrome supporting the product flow.
 
 ## Repository map
 
@@ -202,6 +203,7 @@ src/components/                   Product UI components
 src/data/organisations.ts         Synthetic company universe
 src/lib/scoring.ts                Deterministic screening model
 src/lib/drafting/                 Provider interface, schemas and adapters
+docs/design/                      Visual-system notes and register decisions
 docs/assets/readme/               README visuals
 ```
 

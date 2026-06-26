@@ -46,7 +46,7 @@ export function CompanyExplorer({
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search name, sector, country or ownership..."
+            placeholder="Search companies or signals..."
             aria-label="Search companies"
           />
         </label>
@@ -64,7 +64,10 @@ export function CompanyExplorer({
         </select>
       </div>
       <div className="result-meta">
-        <span>{filtered.length} organisations</span>
+        <span>
+          {filtered.length}{" "}
+          {filtered.length === 1 ? "organisation" : "organisations"}
+        </span>
         <span>Metrics last refreshed May 2026</span>
       </div>
       {filtered.length ? (
